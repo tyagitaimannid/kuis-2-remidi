@@ -1,17 +1,51 @@
-<?php
-error_reporting(E_ALL);
-ini_set('display_error',1);
-session_start();
-//panggil library
-require_once('nusoap/lib/nusoap.php');
-//mendefinisikan alamat url service yang disediakan oleh client 
-$url = 'http://api.radioreference.com/soap2/?wsdl&v=latest';
-// $client = new soapclient($url); 
-$client = new nusoap_client($url, 'WSDL');
+<html>
+<head>
+  <link href="asset/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="asset/css/navbar-fixed-top.css" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script type="text/javascript" src="asset/js/bootstrap.js"> </script> 
+</head>
+<body>
 
-$result = $client->call('getCountryList');
-echo '<table>'
-;print_r($client->response);echo 
-'</table>';
+  <!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">E-Learning</a>
+        </div>
+        <div class="navbar-collapse collapse">
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
 
-?>
+	<?php
+		require_once('nusoap/lib/nusoap.php');
+		$url = 'http://wsf.cdyne.com/WeatherWS/Weather.asmx?WSDL';
+		$client = new nusoap_client($url, 'WSDL');
+		$result = $client->call('GetWeatherInformation');
+	?>
+	
+      <table class="table table-bordered">
+          <tr>
+            <td>ID</td>
+            <td>Weather</td>
+            <td>Picture</td>
+          </tr>
+            <?php foreach ($result['GetWeatherInformationResult']['WeatherDescription'] as $weather){
+				echo "<tr>";
+					echo "<td>".$weather['WeatherID']."</td>";
+					echo "<td>".$weather['Description']."</td>";
+					echo "<td> <img src='".$weather['PictureURL']."'></td>";
+				echo "</tr>";
+				}
+			?>
+        </table>
+
+</body>
+</html>
